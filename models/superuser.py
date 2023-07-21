@@ -7,10 +7,10 @@ from sqlalchemy import orm
 from app.database import db, AppUser
 
 from .base_user import BaseUser
-from .utils import make_hash, hash_verify
+from .utils import make_hash, hash_verify, ModelMixin
 
 
-class SuperUser(db.Model, BaseUser, AppUser):
+class SuperUser(db.Model, BaseUser, AppUser, ModelMixin):
     __tablename__ = "superusers"
 
     password_hash: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
