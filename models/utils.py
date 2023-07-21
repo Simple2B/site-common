@@ -19,8 +19,6 @@ def generate_uuid() -> str:
     return str(uuid.uuid4())
 
 
-def generate_uuid() -> str:
-    return str(uuid.uuid4())
 
 class ModelMixin(object):
     def save(self, commit=True):
