@@ -5,6 +5,7 @@ from sqlalchemy import orm
 
 # must have this import
 from app.database import db, AppUser
+from app.logger import log
 
 from .base_user import BaseUser
 from .utils import make_hash, hash_verify, generate_uuid, ModelMixin
@@ -33,18 +34,16 @@ class SuperUser(db.Model, BaseUser, AppUser, ModelMixin):
         self.password_hash = make_hash(value)
 
     @classmethod
-    def authenticate(cls, db, user_id: str, password: str) -> Self:
-        user = (
-            db.query(cls)
-            .filter(
-                sa.or_(
-                    sa.func.lower(cls.username) == sa.func.lower(user_id),
-                    sa.func.lower(cls.email) == sa.func.lower(user_id),
-                )
-            )
-            .first()
+    def authenticate(cls, user_id, password):
+        query = cls.select().where(
+            (sa.func.lower(cls.username) == sa.func.lower(user_id))
+            | (sa.func.lower(cls.email) == sa.func.lower(user_id))
         )
-        if user is not None and hash_verify(password, user.password):
+        user: Self = db.session.scalar(query)
+        if not user:
+            log(log.WARNING, "user:[%s] not found", user_id)
+
+        if user is not None and hash_verify(password, user.password_hash):
             return user
 
     def reset_password(self):
