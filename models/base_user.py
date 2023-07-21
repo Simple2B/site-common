@@ -21,4 +21,4 @@ class BaseUser:
     created_at: orm.Mapped[datetime] = orm.mapped_column(
         sa.DateTime, default=datetime.utcnow
     )
-    # is_verified = Column(Boolean, default=False)
+    is_verified: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
