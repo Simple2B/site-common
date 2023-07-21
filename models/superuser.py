@@ -4,13 +4,13 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 # must have this import
-from app.database import db
+from app.database import db, AppUser
 
 from .base_user import BaseUser
 from .utils import make_hash, hash_verify
 
 
-class SuperUser(db.Model, BaseUser):
+class SuperUser(db.Model, BaseUser, AppUser):
     __tablename__ = "superusers"
 
     password_hash: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=False)
