@@ -1,7 +1,7 @@
+# flake8: noqa F821
 from typing import List
 import sqlalchemy as sa
 from sqlalchemy import orm
-from sqlalchemy.ext.hybrid import hybrid_property
 
 
 # must have this import
@@ -9,11 +9,8 @@ from app.database import db
 from .case_stacks import case_stacks
 
 
-
 class Case(db.Model):
-
     __tablename__ = "cases"
-
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     title: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)

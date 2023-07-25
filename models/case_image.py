@@ -6,7 +6,6 @@ from sqlalchemy import orm
 from app.database import db
 
 
-
 class CaseImage(db.Model):
 
     __tablename__ = "case_images"

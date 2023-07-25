@@ -1,6 +1,4 @@
 import sqlalchemy as sa
-from sqlalchemy import orm
-from sqlalchemy.ext.hybrid import hybrid_property
 
 # must have this import
 from app.database import db
