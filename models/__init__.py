@@ -6,5 +6,9 @@ from .question import Question
 from .candidate import Candidate
 from .superuser import SuperUser
 from .base_user import BaseUser
+from .case import Case
+from .stack import Stack
+from .case_stacks import CaseStack
+
 
 from .utils import generate_uuid
