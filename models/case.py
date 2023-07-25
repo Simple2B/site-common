@@ -29,8 +29,10 @@ class Case(db.Model):
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     _stacks: orm.Mapped[List["Stack"]] = orm.relationship(
-        secondary=case_stacks, back_populates="_cases", lazy="dynamic"
+        secondary=case_stacks, back_populates="_cases", lazy="dynamic", viewonly=True
     )
+    
+    sub_images: orm.Mapped[List["CaseImage"]] = orm.relationship("CaseImage", viewonly=True )
 
     def __repr__(self):
         return f"<{self.id}: {self.title}>"

@@ -9,6 +9,7 @@ from .base_user import BaseUser
 from .case import Case
 from .stack import Stack
 from .case_stacks import CaseStack
+from .case_image import CaseImage
 
 
 from .utils import generate_uuid
