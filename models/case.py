@@ -14,7 +14,8 @@ class Case(db.Model):
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     title: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
-    title_image_url: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=True)
+    title_image_url: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=False)
+    sub_title_image_url: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=False)
 
     sub_title: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     description: orm.Mapped[str] = orm.mapped_column(sa.String(512), nullable=False)
@@ -26,9 +27,8 @@ class Case(db.Model):
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     _stacks: orm.Mapped[List["Stack"]] = orm.relationship(
-        secondary=case_stacks, back_populates="_cases", lazy="dynamic", viewonly=True
+        secondary=case_stacks, back_populates="_cases", lazy="dynamic", viewonly=True,
     )
-    
     sub_images: orm.Mapped[List["CaseImage"]] = orm.relationship("CaseImage", viewonly=True )
 
     def __repr__(self):
