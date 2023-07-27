@@ -17,6 +17,8 @@ class Question(db.Model, ModelMixin):
         sa.String(128), nullable=False, default=generate_uuid
     )
 
+    is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
+
     variants = orm.relationship("VariantAnswer", viewonly=True)
 
     @property
