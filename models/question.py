@@ -31,3 +31,8 @@ class Question(db.Model, ModelMixin):
 
     def __repr__(self) -> str:
         return f"<{self.id}: {self.text}>"
+
+    def s_dict(self):
+        q_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        q_dict["variants"] = [v.s_dict() for v in self.variants]
+        return q_dict
