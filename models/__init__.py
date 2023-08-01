@@ -6,10 +6,12 @@ from .question import Question
 from .candidate import Candidate
 from .superuser import SuperUser
 from .base_user import BaseUser
+from .image import Image
 from .case import Case
 from .stack import Stack
 from .case_stacks import CaseStack
 from .case_image import CaseImage
+from .case_screenshot import CaseScreenshot
 
 
 from .utils import generate_uuid

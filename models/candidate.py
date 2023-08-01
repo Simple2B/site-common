@@ -15,8 +15,10 @@ class Candidate(db.Model, BaseUser):
     image_url: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
     git_hub_id: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
-    current_question_id: orm.Mapped[int] = orm.mapped_column(nullable=True, default=None)
-    quiz_score: orm.Mapped[float] = orm.mapped_column(default=0)
+    current_question_id: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=True, default=None
+    )
+    quiz_score: orm.Mapped[float] = orm.mapped_column(sa.Float, default=0.0)
 
     _answer = orm.relationship("CandidateAnswer", viewonly=True, lazy="dynamic")
 
@@ -31,7 +33,7 @@ class Candidate(db.Model, BaseUser):
         return self._answer.count()
 
     @hybrid_property
-    def question_ids(self):
+    def question_ids(self) -> list[int]:
         return [answer.question.id for answer in self._answer.all()]
 
     def __repr__(self):
