@@ -14,7 +14,9 @@ class CaseScreenshot(db.Model, Image):
     case_id: orm.Mapped[int] = orm.mapped_column(
         sa.ForeignKey("cases.id"), nullable=False
     )
-    description: orm.Mapped[str] = orm.mapped_column(sa.String(256), nullable=False)
+    description: orm.Mapped[str] = orm.mapped_column(
+        sa.String(256), nullable=True, default=""
+    )
 
     def __repr__(self):
         return f"<{self.id}: {self.url}>"
