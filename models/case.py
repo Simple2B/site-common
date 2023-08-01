@@ -24,6 +24,7 @@ class Case(db.Model):
     is_active: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, nullable=False, default=True)
     is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, nullable=False, default=False)
     project_link: orm.Mapped[str] = orm.mapped_column(sa.String(128), nullable=True)
+    is_main: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, nullable=False, default=False)
 
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
