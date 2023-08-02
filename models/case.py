@@ -1,6 +1,6 @@
 # flake8: noqa F821
 from typing import List
-from prompt_toolkit.key_binding.bindings import vi
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.hybrid import hybrid_property
