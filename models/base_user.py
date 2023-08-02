@@ -25,4 +25,4 @@ class BaseUser:
         sa.DateTime, default=datetime.utcnow
     )
     is_verified: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
-    # is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
+    is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)

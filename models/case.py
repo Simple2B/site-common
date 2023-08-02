@@ -1,5 +1,6 @@
 # flake8: noqa F821
 from typing import List
+from prompt_toolkit.key_binding.bindings import vi
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -16,13 +17,6 @@ class Case(db.Model):
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     title: orm.Mapped[str] = orm.mapped_column(
         sa.String(32), nullable=False, unique=True
-    )
-    main_image_id: orm.Mapped[int] = orm.mapped_column(
-        sa.ForeignKey("case_images.id"), nullable=False
-    )
-    full_main_image_id: orm.Mapped[int] = orm.mapped_column(
-        sa.ForeignKey("case_images.id"),
-        nullable=False,
     )
 
     sub_title: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
@@ -51,13 +45,15 @@ class Case(db.Model):
         "CaseScreenshot", viewonly=True
     )
 
+    case_images: orm.Mapped[List["CaseImage"]] = orm.relationship("CaseImage")
+
     @hybrid_property
     def stacks(self) -> str:
         return [stack.name for stack in self._stacks.all()]
 
     @hybrid_property
     def screenshots(self) -> str:
-        return [img.url for img in self.screenshots.all()]
+        return [img.url for img in self._screenshots]
 
     @hybrid_property
     def slug_name(self) -> str:

@@ -2,6 +2,7 @@
 from typing import List
 import sqlalchemy as sa
 from sqlalchemy import orm
+from app.common.models.case import Case
 
 
 # must have this import
@@ -16,10 +17,8 @@ class Stack(db.Model):
     name: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     _cases: orm.Mapped[List["Case"]] = orm.relationship(
-        "Case",
-        secondary=case_stacks,
-        viewonly=True,lazy="dynamic"
-            )
+        "Case", secondary=case_stacks, viewonly=True, lazy="dynamic"
+    )
 
     def __repr__(self):
         return f"<{self.id}: {self.name}>"

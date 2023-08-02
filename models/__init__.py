@@ -10,7 +10,7 @@ from .image import Image
 from .case import Case
 from .stack import Stack
 from .case_stacks import CaseStack
-from .case_image import CaseImage
+from .case_image import CaseImage, EnumCaseImageType
 from .case_screenshot import CaseScreenshot
 
 
