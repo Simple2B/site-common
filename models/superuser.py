@@ -43,7 +43,11 @@ class SuperUser(db.Model, BaseUser, AppUser, ModelMixin):
         if not user:
             log(log.WARNING, "user:[%s] not found", user_id)
 
-        if user is not None and hash_verify(password, user.password_hash):
+        if (
+            user is not None
+            and not user.is_deleted
+            and hash_verify(password, user.password_hash)
+        ):
             return user
 
     def reset_password(self):
