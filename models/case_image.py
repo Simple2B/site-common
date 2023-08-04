@@ -12,7 +12,6 @@ from app.database import db
 class EnumCaseImageType(enum.Enum):
     case_main_image = "case_main_image"
     case_preview_image = "case_preview_image"
-    case_screenshot = "case_screenshot"
 
 
 class CaseImage(db.Model, Image):
