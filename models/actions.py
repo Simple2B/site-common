@@ -28,6 +28,7 @@ class Action(db.Model):
         sa.Enum(ActionsType), nullable=False
     )
     entity: orm.Mapped[Entity] = orm.mapped_column(sa.Enum(Entity), nullable=False)
+    entity_id: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=False)
     text: orm.Mapped[str] = orm.mapped_column(sa.String(255), nullable=False)
     created_at: orm.Mapped[datetime] = orm.mapped_column(
         sa.DateTime, default=datetime.utcnow
