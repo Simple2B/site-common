@@ -12,6 +12,7 @@ from .stack import Stack
 from .case_stacks import CaseStack
 from .case_image import CaseImage, EnumCaseImageType
 from .case_screenshot import CaseScreenshot
+from .actions import Action
 
 
 from .utils import generate_uuid
