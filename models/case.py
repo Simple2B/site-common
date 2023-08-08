@@ -59,5 +59,10 @@ class Case(db.Model):
     def slug_name(self) -> str:
         return self.title.strip().replace(" ", "-").lower()
 
+    def as_dict(self):
+        q_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        q_dict["_stacks"] = [v.as_dict() for v in self._stacks]
+        return q_dict
+
     def __repr__(self):
         return f"<{self.id}: {self.title}>"

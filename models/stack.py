@@ -20,5 +20,8 @@ class Stack(db.Model):
         "Case", secondary=case_stacks, viewonly=True, lazy="dynamic"
     )
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return f"<{self.id}: {self.name}>"
