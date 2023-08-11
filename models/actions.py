@@ -6,19 +6,21 @@ from sqlalchemy import orm
 from app.database import db
 
 
+class ActionsType(IntEnum):
+    CREATE = 1
+    EDIT = 2
+    DELETE = 3
+
+
+class Entity(IntEnum):
+    CASE = 1
+    ADMIN = 2
+    QUESTION = 3
+    CANDIDATE = 4
+
+
 class Action(db.Model):
     __tablename__ = "actions"
-
-    class ActionsType(IntEnum):
-        CREATE = 1
-        EDIT = 2
-        DELETE = 3
-
-    class Entity(IntEnum):
-        CASE = 1
-        ADMIN = 2
-        QUESTION = 3
-        CANDIDATE = 4
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     user_id: orm.Mapped[int] = orm.mapped_column(
@@ -33,3 +35,6 @@ class Action(db.Model):
     created_at: orm.Mapped[datetime] = orm.mapped_column(
         sa.DateTime, default=datetime.utcnow
     )
+
+    def __repr__(self) -> str:
+        return f"<{self.id}: {self.action} {self.entity}>"
