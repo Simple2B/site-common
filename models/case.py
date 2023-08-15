@@ -45,7 +45,9 @@ class Case(db.Model):
         "CaseScreenshot", viewonly=True
     )
 
-    case_images: orm.Mapped[List["CaseImage"]] = orm.relationship("CaseImage")
+    case_images: orm.Mapped[List["CaseImage"]] = orm.relationship(
+        "CaseImage", viewonly=True, lazy="dynamic"
+    )
 
     @hybrid_property
     def stacks(self) -> str:
@@ -56,13 +58,48 @@ class Case(db.Model):
         return [img.url for img in self._screenshots]
 
     @hybrid_property
+    def main_image(self) -> str:
+        from . import CaseImage, EnumCaseImageType
+
+        image = (
+            self.case_images.filter_by(
+                type_of_image=EnumCaseImageType.case_main_image, is_deleted=False
+            )
+            .order_by(CaseImage.id.desc())
+            .limit(1)
+            .first()
+        )
+
+        if image:
+            return image.url
+        return ""
+
+    @hybrid_property
+    def preview_image(self):
+        from . import CaseImage, EnumCaseImageType
+
+        image = (
+            self.case_images.filter_by(
+                type_of_image=EnumCaseImageType.case_preview_image, is_deleted=False
+            )
+            .order_by(CaseImage.id.desc())
+            .limit(1)
+            .first()
+        )
+
+        if image:
+            return image.url
+        return ""
+
+    @hybrid_property
     def slug_name(self) -> str:
         return self.title.strip().replace(" ", "-").lower()
 
     def as_dict(self):
-        q_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        q_dict["_stacks"] = [v.as_dict() for v in self._stacks]
-        return q_dict
+        case_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        case_dict["_stacks"] = [stack.as_dict() for stack in self._stacks]
+
+        return case_dict
 
     def __repr__(self):
         return f"<{self.id}: {self.title}>"
