@@ -50,8 +50,12 @@ class Case(db.Model):
     )
 
     @hybrid_property
-    def stacks(self) -> str:
+    def stacks_names(self) -> str:
         return [stack.name for stack in self._stacks.all()]
+
+    @hybrid_property
+    def stacks(self) -> str:
+        return self._stacks.all()
 
     @hybrid_property
     def screenshots(self) -> str:
