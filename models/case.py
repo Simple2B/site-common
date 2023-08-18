@@ -93,7 +93,7 @@ class Case(db.Model):
 
     @hybrid_property
     def slug_name(self) -> str:
-        return self.title.strip().replace(" ", "-").lower()
+        return self.title.strip().replace(" ", "-").replace("_", "-").lower()
 
     def as_dict(self):
         case_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
