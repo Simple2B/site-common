@@ -42,7 +42,7 @@ class Case(db.Model):
         viewonly=True,
     )
     _screenshots: orm.Mapped[List["CaseScreenshot"]] = orm.relationship(
-        "CaseScreenshot", viewonly=True
+        "CaseScreenshot", viewonly=True, lazy="dynamic"
     )
 
     case_images: orm.Mapped[List["CaseImage"]] = orm.relationship(
@@ -50,15 +50,19 @@ class Case(db.Model):
     )
 
     @hybrid_property
-    def stacks(self) -> str:
+    def stacks_names(self) -> str:
         return [stack.name for stack in self._stacks.all()]
 
     @hybrid_property
-    def screenshots(self) -> str:
-        return [img.url for img in self._screenshots]
+    def stacks(self) -> str:
+        return self._stacks.all()
 
     @hybrid_property
-    def main_image(self) -> str:
+    def screenshots(self) -> str:
+        return self._screenshots.all()
+
+    @hybrid_property
+    def main_image_url(self) -> str:
         from . import CaseImage, EnumCaseImageType
 
         image = (
@@ -75,7 +79,7 @@ class Case(db.Model):
         return ""
 
     @hybrid_property
-    def preview_image(self):
+    def preview_image_url(self):
         from . import CaseImage, EnumCaseImageType
 
         image = (

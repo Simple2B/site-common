@@ -9,11 +9,12 @@ from .utils import generate_uuid, ModelMixin
 class Device(db.Model, ModelMixin):
     __tablename__ = "devices"
 
-    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
+
     uid: orm.Mapped[str] = orm.mapped_column(
         sa.String(128), nullable=False, default=generate_uuid
     )
-    token = orm.mapped_column(sa.String(512), nullable=False)
+    token: orm.Mapped[str] = orm.mapped_column(sa.String(512), nullable=False)
 
     is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
 
