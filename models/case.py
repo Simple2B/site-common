@@ -62,6 +62,10 @@ class Case(db.Model):
         return self._screenshots.all()
 
     @hybrid_property
+    def screenshots_urls(self) -> str:
+        return [screenshot.url for screenshot in self._screenshots.all()]
+
+    @hybrid_property
     def main_image_url(self) -> str:
         from . import CaseImage, EnumCaseImageType
 
