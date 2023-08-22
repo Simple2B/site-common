@@ -9,6 +9,9 @@ from sqlalchemy.ext.hybrid import hybrid_property
 # must have this import
 from app.database import db
 from .case_stacks import case_stacks
+from .stack import Stack
+from .case_screenshot import CaseScreenshot
+from .case_image import CaseImage, EnumCaseImageType
 
 
 class Case(db.Model):
@@ -36,40 +39,39 @@ class Case(db.Model):
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     _stacks: orm.Mapped[List["Stack"]] = orm.relationship(
+        "Stack",
         secondary=case_stacks,
-        back_populates="_cases",
-        lazy="dynamic",
+        backref="_cases",
         viewonly=True,
     )
+
     _screenshots: orm.Mapped[List["CaseScreenshot"]] = orm.relationship(
-        "CaseScreenshot", viewonly=True, lazy="dynamic"
+        "CaseScreenshot", viewonly=True
     )
 
-    case_images: orm.Mapped[List["CaseImage"]] = orm.relationship(
+    case_images: orm.Mapped[CaseImage] = orm.relationship(
         "CaseImage", viewonly=True, lazy="dynamic"
     )
 
-    @hybrid_property
-    def stacks_names(self) -> str:
-        return [stack.name for stack in self._stacks.all()]
+    @property
+    def stacks_names(self) -> list[str]:
+        return [stack.name for stack in self._stacks]
 
-    @hybrid_property
-    def stacks(self) -> str:
-        return self._stacks.all()
+    @property
+    def stacks(self) -> list["Stack"]:
+        return self._stacks
 
-    @hybrid_property
-    def screenshots(self) -> str:
-        return self._screenshots.all()
+    @property
+    def screenshots(self) -> list["CaseScreenshot"]:
+        return self._screenshots
 
-    @hybrid_property
-    def screenshots_urls(self) -> str:
-        return [screenshot.url for screenshot in self._screenshots.all()]
+    @property
+    def screenshots_urls(self) -> list[str]:
+        return [screenshot.url for screenshot in self._screenshots]
 
     @hybrid_property
     def main_image_url(self) -> str:
-        from . import CaseImage, EnumCaseImageType
-
-        image = (
+        image: CaseImage | None = (
             self.case_images.filter_by(
                 type_of_image=EnumCaseImageType.case_main_image, is_deleted=False
             )
@@ -83,10 +85,9 @@ class Case(db.Model):
         return ""
 
     @hybrid_property
-    def preview_image_url(self):
-        from . import CaseImage, EnumCaseImageType
+    def preview_image_url(self) -> str:
 
-        image = (
+        image: CaseImage | None = (
             self.case_images.filter_by(
                 type_of_image=EnumCaseImageType.case_preview_image, is_deleted=False
             )

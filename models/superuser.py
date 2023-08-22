@@ -39,7 +39,7 @@ class SuperUser(db.Model, BaseUser, AppUser, ModelMixin):
             (sa.func.lower(cls.username) == sa.func.lower(user_id))
             | (sa.func.lower(cls.email) == sa.func.lower(user_id))
         )
-        user: Self = db.session.scalar(query)
+        user: Self | None = db.session.scalar(query)
         if not user:
             log(log.WARNING, "user:[%s] not found", user_id)
 
