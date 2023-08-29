@@ -110,5 +110,8 @@ class Case(db.Model):
 
         return case_dict
 
+    def __str__(self):
+        return self.title
+
     def __repr__(self):
         return f"<{self.id}: {self.title}>"
