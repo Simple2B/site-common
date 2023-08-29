@@ -36,5 +36,11 @@ class Action(db.Model):
         sa.DateTime, default=datetime.utcnow
     )
 
+    _user = orm.relationship("SuperUser", viewonly=True)
+
+    @property
+    def username(self):
+        return self._user.username
+
     def __repr__(self) -> str:
         return f"<{self.id}: {self.action} {self.entity}>"
