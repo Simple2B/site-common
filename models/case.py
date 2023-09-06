@@ -12,6 +12,7 @@ from .case_stacks import case_stacks
 from .stack import Stack
 from .case_screenshot import CaseScreenshot
 from .case_image import CaseImage, EnumCaseImageType
+from .enum import Language
 
 
 class Case(db.Model):
@@ -52,6 +53,17 @@ class Case(db.Model):
     case_images: orm.Mapped[CaseImage] = orm.relationship(
         "CaseImage", viewonly=True, lazy="dynamic"
     )
+
+    @property
+    def germany_translation(self):
+        translations = [
+            translation
+            for translation in self.translations
+            if translation.language == Language.GERMAN
+        ]
+        if translations:
+            return translations[0]
+        return self
 
     @property
     def stacks_names(self) -> list[str]:
