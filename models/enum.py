@@ -2,4 +2,5 @@ import enum
 
 
 class Language(enum.Enum):
-    GERMAN = "de"
+    ENGLISH = "en"
+    GERMANY = "de"

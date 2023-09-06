@@ -14,7 +14,6 @@ from .case_image import CaseImage, EnumCaseImageType
 from .case_screenshot import CaseScreenshot
 from .actions import Action, ActionsType, Entity
 from .device import Device
-from .case_translation import CaseTranslation
 from .enum import Language
 
 

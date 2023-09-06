@@ -37,6 +37,10 @@ class Case(db.Model):
         sa.Boolean, nullable=False, default=False
     )
 
+    language: orm.Mapped[Language] = orm.mapped_column(
+        sa.Enum(Language), nullable=False, default=Language.ENGLISH
+    )
+
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     _stacks: orm.Mapped[List["Stack"]] = orm.relationship(
@@ -54,16 +58,6 @@ class Case(db.Model):
         "CaseImage", viewonly=True, lazy="dynamic"
     )
 
-    @property
-    def germany_translation(self):
-        translations = [
-            translation
-            for translation in self.translations
-            if translation.language == Language.GERMAN
-        ]
-        if translations:
-            return translations[0]
-        return self
 
     @property
     def stacks_names(self) -> list[str]:
