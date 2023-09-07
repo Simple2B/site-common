@@ -12,7 +12,7 @@ from .case_stacks import case_stacks
 from .stack import Stack
 from .case_screenshot import CaseScreenshot
 from .case_image import CaseImage, EnumCaseImageType
-from .enum import Language
+from .enum import Languages
 
 
 class Case(db.Model):
@@ -37,8 +37,8 @@ class Case(db.Model):
         sa.Boolean, nullable=False, default=False
     )
 
-    language: orm.Mapped[Language] = orm.mapped_column(
-        sa.Enum(Language), nullable=False, default=Language.ENGLISH
+    language = orm.mapped_column(
+        sa.Enum(Languages), nullable=False, default=Languages.ENGLISH
     )
 
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)

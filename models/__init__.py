@@ -7,6 +7,7 @@ from .candidate import Candidate
 from .superuser import SuperUser
 from .base_user import BaseUser
 from .image import Image
+from .enum import Languages
 from .case import Case
 from .stack import Stack
 from .case_stacks import CaseStack
@@ -14,7 +15,7 @@ from .case_image import CaseImage, EnumCaseImageType
 from .case_screenshot import CaseScreenshot
 from .actions import Action, ActionsType, Entity
 from .device import Device
-from .enum import Language
 
 
 from .utils import generate_uuid
+
