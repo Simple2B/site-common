@@ -20,7 +20,7 @@ class Case(db.Model):
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     title: orm.Mapped[str] = orm.mapped_column(
-        sa.String(32), nullable=False, unique=True
+        sa.String(32), nullable=False
     )
 
     sub_title: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
