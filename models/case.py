@@ -1,5 +1,5 @@
 # flake8: noqa F821
-from typing import List
+from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
 from sqlalchemy import orm
@@ -9,19 +9,19 @@ from sqlalchemy.ext.hybrid import hybrid_property
 # must have this import
 from app.database import db
 from .case_stacks import case_stacks
-from .stack import Stack
-from .case_screenshot import CaseScreenshot
-from .case_image import CaseImage, EnumCaseImageType
+from .case_image import EnumCaseImageType, CaseImage
 from .enum import Languages
+
+if TYPE_CHECKING:
+    from .stack import Stack
+    from .case_screenshot import CaseScreenshot
 
 
 class Case(db.Model):
     __tablename__ = "cases"
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
-    title: orm.Mapped[str] = orm.mapped_column(
-        sa.String(32), nullable=False
-    )
+    title: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     sub_title: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     description: orm.Mapped[str] = orm.mapped_column(sa.String(512), nullable=False)
@@ -43,21 +43,14 @@ class Case(db.Model):
 
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
-    _stacks: orm.Mapped[List["Stack"]] = orm.relationship(
-        "Stack",
+    _stacks: orm.Mapped[list["Stack"]] = orm.relationship(
         secondary=case_stacks,
-        backref="_cases",
-        viewonly=True,
+        back_populates="_cases",
     )
 
-    _screenshots: orm.Mapped[List["CaseScreenshot"]] = orm.relationship(
-        "CaseScreenshot", viewonly=True
-    )
+    _screenshots: orm.Mapped[list["CaseScreenshot"]] = orm.relationship()
 
-    case_images: orm.Mapped[CaseImage] = orm.relationship(
-        "CaseImage", viewonly=True, lazy="dynamic"
-    )
-
+    case_images: orm.Mapped[list["CaseImage"]] = orm.relationship(lazy="dynamic")
 
     @property
     def stacks_names(self) -> list[str]:
@@ -77,6 +70,7 @@ class Case(db.Model):
 
     @hybrid_property
     def main_image_url(self) -> str:
+
         image: CaseImage | None = (
             self.case_images.filter_by(
                 type_of_image=EnumCaseImageType.case_main_image, is_deleted=False
@@ -109,12 +103,6 @@ class Case(db.Model):
     @hybrid_property
     def slug_name(self) -> str:
         return self.title.strip().replace(" ", "-").replace("_", "-").lower()
-
-    def as_dict(self):
-        case_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        case_dict["_stacks"] = [stack.as_dict() for stack in self._stacks]
-
-        return case_dict
 
     def __str__(self):
         return self.title
