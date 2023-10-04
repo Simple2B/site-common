@@ -29,7 +29,8 @@ class Candidate(db.Model, BaseUser):
 
     @classmethod
     def authenticate(cls, db: orm.Session, git_hub_id: int) -> Self | None:
-        return db.scalar(cls.select().where(cls.git_hub_id == git_hub_id))
+        user: Self | None = db.scalar(cls.select().where(cls.git_hub_id == git_hub_id))
+        return user
 
     @property
     def count_of_answers(self) -> int:
