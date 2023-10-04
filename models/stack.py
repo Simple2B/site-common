@@ -1,10 +1,14 @@
-# flake8: noqa F821
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 from sqlalchemy import orm
-
+from .case_stacks import case_stacks
 
 # must have this import
 from app.database import db
+
+if TYPE_CHECKING:
+    from .case import Case
 
 
 class Stack(db.Model):
@@ -13,8 +17,9 @@ class Stack(db.Model):
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     name: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
-    def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    _cases: orm.Mapped[list["Case"]] = orm.relationship(
+        secondary=case_stacks,
+    )
 
     def __repr__(self):
         return f"<{self.id}: {self.name}>"

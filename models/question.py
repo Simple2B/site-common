@@ -1,9 +1,14 @@
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.database import db
 
 from .utils import generate_uuid, ModelMixin
+
+if TYPE_CHECKING:
+    from .variant_answers import VariantAnswer
 
 
 class Question(db.Model, ModelMixin):
@@ -19,10 +24,10 @@ class Question(db.Model, ModelMixin):
 
     is_deleted: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, default=False)
 
-    variants = orm.relationship("VariantAnswer", viewonly=True)
+    variants: orm.Mapped[list["VariantAnswer"]] = orm.relationship()
 
     @property
-    def vacancies_ids(self):
+    def vacancies_ids(self) -> list[int]:
         return [vacancy.id for vacancy in self.variants]
 
     @property
@@ -33,8 +38,3 @@ class Question(db.Model, ModelMixin):
 
     def __repr__(self) -> str:
         return f"<{self.id}: {self.text}>"
-
-    def s_dict(self):
-        q_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        q_dict["variants"] = [v.s_dict() for v in self.variants]
-        return q_dict

@@ -1,3 +1,4 @@
+from typing import Self, TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -7,6 +8,10 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from app.database import db
 
 from .base_user import BaseUser
+
+
+if TYPE_CHECKING:
+    from .candidate_answers import CandidateAnswer
 
 
 class Candidate(db.Model, BaseUser):
@@ -20,21 +25,19 @@ class Candidate(db.Model, BaseUser):
     )
     quiz_score: orm.Mapped[float] = orm.mapped_column(sa.Float, default=0.0)
 
-    _answer = orm.relationship("CandidateAnswer", viewonly=True, lazy="dynamic")
+    answers: orm.Mapped[list["CandidateAnswer"]] = orm.relationship()
 
     @classmethod
-    def authenticate(cls, db, git_hub_id: int):
-        user = db.query(cls).filter_by(git_hub_id=git_hub_id).first()
-        if user is not None:
-            return user
+    def authenticate(cls, db: orm.Session, git_hub_id: int) -> Self | None:
+        return db.scalar(cls.select().where(cls.git_hub_id == git_hub_id))
 
-    @hybrid_property
-    def count_of_answers(self):
-        return self._answer.count()
+    @property
+    def count_of_answers(self) -> int:
+        return len(self.answers)
 
     @hybrid_property
     def question_ids(self) -> list[int]:
-        return [answer.question.id for answer in self._answer.all()]
+        return [answer.question.id for answer in self.answers]
 
     def __repr__(self):
         return f"<{self.id}: {self.username}>"

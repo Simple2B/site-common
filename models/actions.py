@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from datetime import datetime
 from enum import IntEnum
 
@@ -19,6 +21,10 @@ class Entity(IntEnum):
     CANDIDATE = 4
 
 
+if TYPE_CHECKING:
+    from .superuser import SuperUser
+
+
 class Action(db.Model):
     __tablename__ = "actions"
 
@@ -36,10 +42,10 @@ class Action(db.Model):
         sa.DateTime, default=datetime.utcnow
     )
 
-    _user = orm.relationship("SuperUser", viewonly=True)
+    _user: orm.Mapped["SuperUser"] = orm.relationship(viewonly=True)
 
     @property
-    def username(self):
+    def username(self) -> str:
         return self._user.username
 
     def __repr__(self) -> str:
