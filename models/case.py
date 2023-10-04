@@ -19,9 +19,7 @@ class Case(db.Model):
     __tablename__ = "cases"
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
-    title: orm.Mapped[str] = orm.mapped_column(
-        sa.String(32), nullable=False
-    )
+    title: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
 
     sub_title: orm.Mapped[str] = orm.mapped_column(sa.String(64), nullable=False)
     description: orm.Mapped[str] = orm.mapped_column(sa.String(512), nullable=False)
@@ -58,7 +56,6 @@ class Case(db.Model):
         "CaseImage", viewonly=True, lazy="dynamic"
     )
 
-
     @property
     def stacks_names(self) -> list[str]:
         return [stack.name for stack in self._stacks]
@@ -69,7 +66,9 @@ class Case(db.Model):
 
     @property
     def screenshots(self) -> list["CaseScreenshot"]:
-        return self._screenshots
+        return sorted(
+            self._screenshots, key=lambda screenshot: screenshot.origin_file_name
+        )
 
     @property
     def screenshots_urls(self) -> list[str]:
