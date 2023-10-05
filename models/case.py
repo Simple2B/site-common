@@ -50,9 +50,7 @@ class Case(db.Model):
 
     _screenshots: orm.Mapped[list["CaseScreenshot"]] = orm.relationship()
 
-    case_images: orm.Mapped["CaseImage"] = orm.relationship(
-        "CaseImage", viewonly=True, lazy="dynamic"
-    )
+    case_images: orm.WriteOnlyMapped["CaseImage"] = orm.relationship()
 
     @property
     def stacks_names(self) -> list[str]:
@@ -74,14 +72,18 @@ class Case(db.Model):
 
     @hybrid_property
     def main_image_url(self) -> str:
-
-        image: CaseImage | None = (
-            self.case_images.filter_by(
-                type_of_image=EnumCaseImageType.case_main_image, is_deleted=False
+        session = orm.object_session(self)
+        if not session:
+            return ""
+        image: CaseImage | None = session.scalar(
+            self.case_images.select()
+            .where(
+                sa.and_(
+                    CaseImage.type_of_image == EnumCaseImageType.case_main_image,
+                    CaseImage.is_deleted.is_(False),
+                )
             )
             .order_by(CaseImage.id.desc())
-            .limit(1)
-            .first()
         )
 
         if image:
@@ -90,14 +92,18 @@ class Case(db.Model):
 
     @hybrid_property
     def preview_image_url(self) -> str:
-
-        image: CaseImage | None = (
-            self.case_images.filter_by(
-                type_of_image=EnumCaseImageType.case_preview_image, is_deleted=False
+        session = orm.object_session(self)
+        if not session:
+            return ""
+        image: CaseImage | None = session.scalar(
+            self.case_images.select()
+            .where(
+                sa.and_(
+                    CaseImage.type_of_image == EnumCaseImageType.case_preview_image,
+                    CaseImage.is_deleted.is_(False),
+                ),
             )
             .order_by(CaseImage.id.desc())
-            .limit(1)
-            .first()
         )
 
         if image:
