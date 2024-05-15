@@ -9,7 +9,7 @@ from app.database import db
 
 
 class BlacklistIP(db.Model):
-    __tablename__ = "black_list_ips"
+    __tablename__ = "blacklist_ips"
 
     id: orm.Mapped[int] = orm.mapped_column(sa.Integer, primary_key=True)
     address: orm.Mapped[str] = orm.mapped_column(sa.String(64))
