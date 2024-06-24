@@ -16,6 +16,7 @@ from .case_screenshot import CaseScreenshot
 from .actions import Action, ActionsType, Entity
 from .device import Device
 from .blacklist_ip import BlacklistIP
+from .feedbacks import FeedBack
 
 
 from .utils import generate_uuid
