@@ -1,5 +1,6 @@
 # flake8: noqa F821
-
+from random import randint
+from urllib.parse import urljoin
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -8,6 +9,7 @@ from sqlalchemy import orm
 from app.database import db
 from .enum import Languages
 from .utils import generate_uuid
+from app.config import IMG_DOMAIN_SERVER
 
 
 class FeedBack(db.Model):
@@ -27,6 +29,10 @@ class FeedBack(db.Model):
     language: orm.Mapped[str] = orm.mapped_column(
         sa.String(16), nullable=False, default=Languages.ENGLISH.value
     )
+
+    @property
+    def img_url(self):
+        return urljoin(IMG_DOMAIN_SERVER, f"/feedbacks/{randint(1, 14)}.svg")
 
     def __repr__(self):
         return f"<{self.id}: {self.client_name}>"
