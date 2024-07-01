@@ -23,7 +23,7 @@ class FeedBack(db.Model):
     project_name: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(128), nullable=False
     )
-    link: orm.Mapped[str | None] = orm.mapped_column(sa.String(512))
+    link: orm.Mapped[str | None] = orm.mapped_column(sa.String(512), default=None)
 
     comment: orm.Mapped[str] = orm.mapped_column(sa.Text, nullable=False)
     language: orm.Mapped[str] = orm.mapped_column(
