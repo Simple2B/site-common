@@ -9,7 +9,6 @@ from sqlalchemy import orm
 from app.database import db
 from .enum import Languages
 from .utils import generate_uuid
-from app.config import IMG_DOMAIN_SERVER
 
 
 class FeedBack(db.Model):
@@ -32,7 +31,7 @@ class FeedBack(db.Model):
 
     @property
     def img_url(self):
-        return urljoin(IMG_DOMAIN_SERVER, f"/feedbacks/{randint(1, 14)}.svg")
+        return urljoin("https://static.simple2b.net", f"/feedbacks/{randint(1, 14)}.svg")
 
     def __repr__(self):
         return f"<{self.id}: {self.client_name}>"
