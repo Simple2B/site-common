@@ -42,6 +42,9 @@ class Case(db.Model):
     )
 
     role: orm.Mapped[str] = orm.mapped_column(sa.String(32), nullable=False)
+    order_index: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=False, default=1
+    )
 
     _stacks: orm.Mapped[list["Stack"]] = orm.relationship(
         secondary=case_stacks,
